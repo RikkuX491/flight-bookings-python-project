@@ -8,6 +8,10 @@ def seed_database():
     Flight.create("Emirates", 2523.34, "Newark, NJ (EWR)", "Athens, Greece (ATH)")
     Flight.create("JetBlue", 748.23, "Jamaica, NY (JFK)", "Nassau, Bahamas (NAS)")
 
-    print("🌱 Flights successfully seeded! 🌱")
+    Booking.create(2, 1)
+    Booking.create(3, 1)
+    Booking.create(3, 2)
+
+    print("🌱 Flights and Bookings successfully seeded! 🌱")
 
 seed_database()
