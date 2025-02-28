@@ -30,5 +30,18 @@ class Booking:
         else:
             raise Exception("Error: Flight ID must be an integer!")
         
+    @classmethod
+    def create_table(cls):
+        sql = '''
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INTEGER PRIMARY KEY,
+                number_of_tickets INTEGER,
+                total_price REAL,
+                flight_id INTEGER
+            )
+        '''
+
+        CURSOR.execute(sql)
+        
     def __repr__(self):
         return f"<Booking # {self.id} - Number Of Tickets: {self.number_of_tickets}, Total Price: {self.total_price}, Flight ID: {self.flight_id}>"
