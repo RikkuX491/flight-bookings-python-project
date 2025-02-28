@@ -32,7 +32,7 @@ class Flight:
         if (type(value) in [int, float]) and (value > 0):
             self._price = value
         else:
-            raise Exception("Price must be a number that is greater than 0!")
+            raise Exception("Error: Price must be a number that is greater than 0!")
         
     @classmethod
     def create_table(cls):
