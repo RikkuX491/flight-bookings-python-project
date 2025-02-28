@@ -116,5 +116,17 @@ class Flight:
 
         Flight.all = [flight for flight in Flight.all if flight.id != self.id]
 
+    def bookings(self):
+        from models.booking import Booking
+
+        sql = '''
+            SELECT * FROM bookings
+            WHERE flight_id = ?
+        '''
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+        return [Booking.instance_from_db(row) for row in rows]
+
     def __repr__(self):
         return f"<Flight # {self.id} - Airline: {self.airline}, Price: {self.price}, Origin: {self.origin}, Destination: {self.destination}>"

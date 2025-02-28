@@ -72,6 +72,37 @@ class Booking:
         new_booking.save()
         return new_booking
 
+    @classmethod
+    def instance_from_db(cls, row):
+        new_booking = cls(row[1], row[3])
+        new_booking.id = row[0]
+        new_booking.total_price = row[2]
+        return new_booking
+    
+    @classmethod
+    def get_all(cls):
+        sql = '''
+            SELECT * FROM bookings
+        '''
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        cls.all = [cls.instance_from_db(row) for row in rows]
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = '''
+            SELECT * FROM bookings
+            WHERE id = ?
+        '''
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        if row:
+            return cls.instance_from_db(row)
+        else:
+            return None
+
     def flight(self):
         from models.flight import Flight
 
