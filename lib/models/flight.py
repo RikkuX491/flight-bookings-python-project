@@ -1,6 +1,8 @@
 from models.__init__ import CONN, CURSOR
 
 class Flight:
+
+    all = []
     
     def __init__(self, airline, price, origin, destination):
         self.airline = airline
