@@ -47,3 +47,49 @@ class Flight:
         '''
 
         CURSOR.execute(sql)
+
+    @classmethod
+    def drop_table(cls):
+        sql = '''
+            DROP TABLE IF EXISTS flights
+        '''
+
+        CURSOR.execute(sql)
+
+    def save(self):
+        sql = '''
+            INSERT INTO flights (airline, price, origin, destination)
+            VALUES (?, ?, ?, ?)
+        '''
+
+        CURSOR.execute(sql, (self.airline, self.price, self.origin, self.destination))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+
+        Flight.all.append(self)
+
+    @classmethod
+    def create(cls, airline, price, origin, destination):
+        new_flight = cls(airline, price, origin, destination)
+        new_flight.save()
+        return new_flight
+    
+    @classmethod
+    def instance_from_db(cls, row):
+        new_flight = cls(row[1], row[2], row[3], row[4])
+        new_flight.id = row[0]
+        return new_flight
+    
+    @classmethod
+    def get_all(cls):
+        sql = '''
+            SELECT * FROM flights
+        '''
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        cls.all = [cls.instance_from_db(row) for row in rows]
+
+    def __repr__(self):
+        return f"<Flight # {self.id} - Airline: {self.airline}, Price: {self.price}, Origin: {self.origin}, Destination: {self.destination}>"
