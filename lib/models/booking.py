@@ -42,6 +42,14 @@ class Booking:
         '''
 
         CURSOR.execute(sql)
+
+    @classmethod
+    def drop_table(cls):
+        sql = '''
+            DROP TABLE IF EXISTS bookings
+        '''
+
+        CURSOR.execute(sql)
         
     def __repr__(self):
         return f"<Booking # {self.id} - Number Of Tickets: {self.number_of_tickets}, Total Price: {self.total_price}, Flight ID: {self.flight_id}>"
