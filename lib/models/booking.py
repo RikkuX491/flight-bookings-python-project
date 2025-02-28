@@ -1,12 +1,14 @@
 from models.__init__ import CONN, CURSOR
 
 class Booking:
+
+    all = []
     
     def __init__(self, number_of_tickets, flight_id):
         self.id = None
         self.number_of_tickets = number_of_tickets
-        self.total_price = None
         self.flight_id = flight_id
+        self.total_price = self.number_of_tickets * (self.flight().price)
 
     @property
     def number_of_tickets_getter(self):
@@ -50,6 +52,40 @@ class Booking:
         '''
 
         CURSOR.execute(sql)
+
+    def save(self):
+        sql = '''
+            INSERT INTO bookings (number_of_tickets, total_price, flight_id)
+            VALUES (?, ?, ?)
+        '''
+
+        CURSOR.execute(sql, (self.number_of_tickets, self.total_price, self.flight_id))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+
+        Booking.all.append(self)
+
+    @classmethod
+    def create(cls, number_of_tickets, flight_id):
+        new_booking = cls(number_of_tickets, flight_id)
+        new_booking.save()
+        return new_booking
+
+    def flight(self):
+        from models.flight import Flight
+
+        sql = '''
+            SELECT * FROM flights
+            WHERE id = ?
+        '''
+
+        row = CURSOR.execute(sql, (self.flight_id,)).fetchone()
+
+        if row:
+            return Flight.instance_from_db(row)
+        else:
+            return None
         
     def __repr__(self):
         return f"<Booking # {self.id} - Number Of Tickets: {self.number_of_tickets}, Total Price: {self.total_price}, Flight ID: {self.flight_id}>"
