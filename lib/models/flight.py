@@ -9,6 +9,7 @@ class Flight:
         self.price = price
         self.origin = origin
         self.destination = destination
+        self.id = None
 
     @property
     def airline_getter(self):
@@ -32,3 +33,17 @@ class Flight:
             self._price = value
         else:
             raise Exception("Price must be a number that is greater than 0!")
+        
+    @classmethod
+    def create_table(cls):
+        sql = '''
+            CREATE TABLE IF NOT EXISTS flights (
+                id INTEGER PRIMARY KEY,
+                airline TEXT,
+                price REAL,
+                origin TEXT,
+                destination TEXT
+            )
+        '''
+
+        CURSOR.execute(sql)
