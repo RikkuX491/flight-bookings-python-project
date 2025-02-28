@@ -91,5 +91,30 @@ class Flight:
 
         cls.all = [cls.instance_from_db(row) for row in rows]
 
+    @classmethod
+    def find_by_id(cls, id):
+        sql = '''
+            SELECT * FROM flights
+            WHERE id = ?
+        '''
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        if row:
+            return cls.instance_from_db(row)
+        else:
+            return None
+        
+    def delete(self):
+        sql = '''
+            DELETE FROM flights
+            WHERE id = ?
+        '''
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        Flight.all = [flight for flight in Flight.all if flight.id != self.id]
+
     def __repr__(self):
         return f"<Flight # {self.id} - Airline: {self.airline}, Price: {self.price}, Origin: {self.origin}, Destination: {self.destination}>"
