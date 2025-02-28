@@ -102,6 +102,17 @@ class Booking:
             return cls.instance_from_db(row)
         else:
             return None
+        
+    def delete(self):
+        sql = '''
+            DELETE FROM bookings
+            WHERE id = ?
+        '''
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        Booking.all = [booking for booking in Booking.all if booking.id != self.id]
 
     def flight(self):
         from models.flight import Flight
